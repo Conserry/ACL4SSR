@@ -2,7 +2,7 @@
 # 数量：25条
 DOMAIN-SUFFIX,riotgames.com
 DOMAIN-SUFFIX,riotcdn.net
-DOMAIN,glz-ap-1.ap.a.pvp.net
+DOMAIN-SUFFIX,ap.a.pvp.net
 DOMAIN-SUFFIX,newrelic.com
 DOMIAN-SUFFIX,contentstack.io
 DOMIAN-SUFFIX,contentstack.io
