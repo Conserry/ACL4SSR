@@ -6,4 +6,4 @@ DOMAIN-SUFFIX,pvp.net
 DOMAIN-SUFFIX,newrelic.com
 DOMIAN-SUFFIX,contentstack.io
 DOMIAN-SUFFIX,vivox.com
-
+IP-CIDR,23.40.241.251/32,no-resolve
