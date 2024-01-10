@@ -15,8 +15,8 @@ DOMAIN-SUFFIX,apd-pcdnwxlogin.teg.tencent-cloud.net
 DOMAIN-SUFFIX,api.iegadp.qq.com
 DOMAIN-SUFFIX,sf3-ttcdn-tos.pstatp.com
 DOMAIN-SUFFIX,v6-novelapp.ixigua.com
-DOMAIN-SUFFIX-KEYWORD,zijieapi
-DOMAIN-SUFFIX-SUFFIX,pglstatp-toutiao.com
-DOMAIN-SUFFIX-SUFFIX,byteorge.com
-DOMAIN-SUFFIX-SUFFIX,bytegoofy.com
-DOMAIN-SUFFIX-SUFFIX,bytedance.com
+DOMAIN-KEYWORD,zijieapi
+DOMAIN-SUFFIX,pglstatp-toutiao.com
+DOMAIN-SUFFIX,byteorge.com
+DOMAIN-SUFFIX,bytegoofy.com
+DOMAIN-SUFFIX,bytedance.com
