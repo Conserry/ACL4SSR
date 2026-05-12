@@ -1,4 +1,15 @@
 function main(config) {
+  // 先保存原代理组图标
+  const groupIcons = {};
+
+  if (Array.isArray(config["proxy-groups"])) {
+    config["proxy-groups"].forEach(group => {
+      if (group.name && group.icon) {
+        groupIcons[group.name] = group.icon;
+      }
+    });
+  }
+
   const domesticNameservers = [
     "https://223.5.5.5/dns-query",
     "https://doh.pub/dns-query"
@@ -11,6 +22,7 @@ function main(config) {
     "https://8.8.4.4/dns-query"
   ];
 
+  // 只覆写 DNS
   config["dns"] = {
     "enable": true,
     "listen": "0.0.0.0:53",
@@ -57,6 +69,15 @@ function main(config) {
 
     "fallback": []
   };
+
+  // 把原来的图标补回去
+  if (Array.isArray(config["proxy-groups"])) {
+    config["proxy-groups"].forEach(group => {
+      if (group.name && groupIcons[group.name]) {
+        group.icon = groupIcons[group.name];
+      }
+    });
+  }
 
   return config;
 }
