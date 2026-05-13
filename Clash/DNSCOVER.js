@@ -200,21 +200,32 @@ function main(config) {
 
   function fixEmojiText(text) {
     if (typeof text !== "string") return text;
-
+  
     let result = text;
-
+  
     // 处理 /flag-hk/、/flag-jp/、/flag-us/、/flag-gb/ 等
     result = result.replace(/\/flag[-_]?([a-zA-Z]{2})\//g, function(match, code) {
       return countryCodeToFlag(code) || match;
     });
-
-    // 处理 /recycle/、/youtube/、/openai/ 等
+  
+    // 处理 /recycle/、/youtube/、/openai/、/penguin/ 等
     result = result.replace(/\/([a-zA-Z0-9_-]+)\//g, function(match, key) {
       const normalized = key.toLowerCase();
       return emojiMap[normalized] || match;
     });
-
-    return result.replace(/\s+/g, " ").trim();
+  
+    // 清理多余空格
+    result = result.replace(/\s+/g, " ").trim();
+  
+    // 关键词兜底：原始名字里没有占位符，但含有“专用节点”时，主动加 🐧
+    if (
+      /专用节点|專用節點|self|SELF|Self|dedicated|exclusive|private/i.test(result) &&
+      !result.includes("🐧")
+    ) {
+      result = "🐧 " + result;
+    }
+  
+    return result;
   }
 
   /***********************
