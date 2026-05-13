@@ -1,10 +1,8 @@
 function main(config) {
   /***********************
-   * 0. 基础参数
+   * 0. DNS 参数
    ***********************/
   const DNS_LISTEN = "0.0.0.0:53";
-  // 如果 53 端口报错，改成：
-  // const DNS_LISTEN = "0.0.0.0:1053";
 
   const domesticNameservers = [
     "https://223.5.5.5/dns-query",
@@ -69,21 +67,18 @@ function main(config) {
   };
 
   /***********************
-   * 2. 修复 AnyTLS 字段
+   * 2. 修复 AnyTLS
    ***********************/
   if (Array.isArray(config["proxies"])) {
     config["proxies"].forEach(proxy => {
       if (!proxy || proxy.type !== "anytls") return;
 
-      // 订阅转换器有时输出 fingerprint，mihomo 更标准的是 client-fingerprint
       if (proxy.fingerprint && !proxy["client-fingerprint"]) {
         proxy["client-fingerprint"] = proxy.fingerprint;
       }
 
-      // 删除 fingerprint，避免 mihomo 解析歧义
       delete proxy.fingerprint;
 
-      // 补充 AnyTLS 默认空闲会话参数
       if (proxy["idle-session-check-interval"] === undefined) {
         proxy["idle-session-check-interval"] = 30;
       }
@@ -103,27 +98,27 @@ function main(config) {
   /***********************
    * 3. 占位符转 emoji
    ***********************/
-
-  // 普通图标占位符映射
   const emojiMap = {
-    // 策略组/功能
     "recycle": "♻️",
     "auto": "♻️",
     "urltest": "♻️",
     "url-test": "♻️",
-    "loadbalance": "⚖️",
-    "load-balance": "⚖️",
+
     "select": "🚀",
     "rocket": "🚀",
     "manual": "👆",
+
     "direct": "🎯",
     "target": "🎯",
+
     "global": "🌍",
     "globe": "🌍",
     "earth": "🌍",
     "world": "🌍",
+
     "fish": "🐟",
     "final": "🐟",
+
     "reject": "🛑",
     "block": "🛑",
     "ban": "🛑",
@@ -131,7 +126,6 @@ function main(config) {
     "ads": "🛑",
     "bug": "🛑",
 
-    // 常用服务
     "youtube": "📹",
     "yt": "📹",
     "netflix": "🎥",
@@ -162,18 +156,18 @@ function main(config) {
     "bahamut": "📺",
     "tvb": "📻",
 
-    // 其他
+    "penguin": "🐧",
+    "self": "🐧",
+    "private": "🐧",
+
     "book": "📖",
     "scholar": "📖",
     "study": "📖",
     "academic": "📖",
     "cloud": "☁️",
-    "download": "⬇️",
-    "lock": "🔒",
-    "unlock": "🔓"
+    "download": "⬇️"
   };
 
-  // 两位地区代码转旗帜 emoji，例如 hk -> 🇭🇰
   function countryCodeToFlag(code) {
     if (typeof code !== "string") return "";
 
@@ -198,49 +192,61 @@ function main(config) {
     );
   }
 
-  function fixEmojiText(text) {
+  function fixPlaceholderEmoji(text) {
     if (typeof text !== "string") return text;
-  
+
     let result = text;
-  
-    // 处理 /flag-hk/、/flag-jp/、/flag-us/、/flag-gb/ 等
+
+    // /flag-hk/ -> 🇭🇰
     result = result.replace(/\/flag[-_]?([a-zA-Z]{2})\//g, function(match, code) {
       return countryCodeToFlag(code) || match;
     });
-  
-    // 处理 /recycle/、/youtube/、/openai/、/penguin/ 等
+
+    // /recycle/ -> ♻️
     result = result.replace(/\/([a-zA-Z0-9_-]+)\//g, function(match, key) {
       const normalized = key.toLowerCase();
       return emojiMap[normalized] || match;
     });
-  
-    // 清理多余空格
-    result = result.replace(/\s+/g, " ").trim();
-  
-    // 关键词兜底：原始名字里没有占位符，但含有“专用节点”时，主动加 🐧
+
+    return result.replace(/\s+/g, " ").trim();
+  }
+
+  // 只处理“专用节点”这个策略组，不做模糊关键词全局替换
+  function fixDedicatedGroupName(name) {
+    if (typeof name !== "string") return name;
+
+    let result = fixPlaceholderEmoji(name);
+
+    const clean = result
+      .replace(/^🐧\s*/, "")
+      .replace(/^\/penguin\/\s*/, "")
+      .trim();
+
     if (
-      /专用节点|專用節點|self|SELF|Self|dedicated|exclusive|private/i.test(result) &&
-      !result.includes("🐧")
+      clean === "专用节点" ||
+      clean === "專用節點" ||
+      clean === "self" ||
+      clean === "Self" ||
+      clean === "SELF"
     ) {
-      result = "🐧 " + result;
+      return "🐧 " + clean;
     }
-  
+
     return result;
   }
 
   /***********************
-   * 4. 重命名节点和策略组，并同步引用
+   * 4. 建立重命名映射
    ***********************/
-
   const renameMap = {};
 
-  // 修复节点名称
+  // 节点名：只修 /flag-hk/ 这种占位符，不做“专用节点”兜底
   if (Array.isArray(config["proxies"])) {
     config["proxies"].forEach(proxy => {
       if (!proxy || !proxy.name) return;
 
       const oldName = proxy.name;
-      const newName = fixEmojiText(oldName);
+      const newName = fixPlaceholderEmoji(oldName);
 
       if (oldName !== newName) {
         renameMap[oldName] = newName;
@@ -249,13 +255,13 @@ function main(config) {
     });
   }
 
-  // 修复策略组名称
+  // 策略组名：修占位符；只有“专用节点”单独补 🐧
   if (Array.isArray(config["proxy-groups"])) {
     config["proxy-groups"].forEach(group => {
       if (!group || !group.name) return;
 
       const oldName = group.name;
-      const newName = fixEmojiText(oldName);
+      const newName = fixDedicatedGroupName(oldName);
 
       if (oldName !== newName) {
         renameMap[oldName] = newName;
@@ -266,19 +272,31 @@ function main(config) {
 
   function fixRef(name) {
     if (typeof name !== "string") return name;
-    return renameMap[name] || fixEmojiText(name);
+
+    if (renameMap[name]) {
+      return renameMap[name];
+    }
+
+    // 引用里只处理占位符，不做专用节点兜底，避免误改
+    return fixPlaceholderEmoji(name);
   }
 
-  // 修复策略组里的 proxies 引用
+  /***********************
+   * 5. 同步策略组引用
+   ***********************/
   if (Array.isArray(config["proxy-groups"])) {
     config["proxy-groups"].forEach(group => {
+      if (!group) return;
+
       if (Array.isArray(group.proxies)) {
         group.proxies = group.proxies.map(item => fixRef(item));
       }
     });
   }
 
-  // 修复规则里的策略组引用
+  /***********************
+   * 6. 同步 rules 里的策略组名
+   ***********************/
   if (Array.isArray(config["rules"])) {
     config["rules"] = config["rules"].map(rule => {
       if (typeof rule !== "string") return rule;
@@ -288,7 +306,6 @@ function main(config) {
 
       let policyIndex = parts.length - 1;
 
-      // 处理 no-resolve，例如 GEOIP,CN,DIRECT,no-resolve
       if (parts[policyIndex].trim().toLowerCase() === "no-resolve") {
         policyIndex = parts.length - 2;
       }
