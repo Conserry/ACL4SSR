@@ -96,144 +96,234 @@ function main(config) {
   }
 
   /***********************
-   * 3. 占位符转 emoji
-   ***********************/
-  const emojiMap = {
-    "recycle": "♻️",
-    "auto": "♻️",
-    "urltest": "♻️",
-    "url-test": "♻️",
+/***********************
+ * 3. 占位符转 emoji：支持 /robot_face/、/globe_with_meridians/ 等 shortcode
+ ***********************/
 
-    "select": "🚀",
-    "rocket": "🚀",
-    "manual": "👆",
+// 常见 emoji shortcode 映射表
+const emojiMap = {
+  // 策略组/代理
+  "recycle": "♻️",
+  "arrows_counterclockwise": "🔄",
+  "repeat": "🔁",
+  "auto": "♻️",
+  "urltest": "♻️",
+  "url_test": "♻️",
+  "loadbalance": "⚖️",
+  "load_balance": "⚖️",
+  "balance_scale": "⚖️",
+  "select": "🚀",
+  "rocket": "🚀",
+  "manual": "👆",
+  "point_up": "☝️",
+  "point_up_2": "👆",
+  "direct": "🎯",
+  "target": "🎯",
+  "dart": "🎯",
+  "global": "🌍",
+  "globe": "🌍",
+  "globe_with_meridians": "🌐",
+  "earth": "🌍",
+  "earth_asia": "🌏",
+  "earth_africa": "🌍",
+  "earth_americas": "🌎",
+  "world": "🌍",
+  "fish": "🐟",
+  "tropical_fish": "🐠",
+  "final": "🐟",
+  "penguin": "🐧",
+  "self": "🐧",
+  "private": "🐧",
+  "dedicated": "🐧",
 
-    "direct": "🎯",
-    "target": "🎯",
+  // 拦截/广告
+  "reject": "🛑",
+  "block": "🛑",
+  "stop_sign": "🛑",
+  "no_entry": "⛔",
+  "prohibited": "🚫",
+  "ban": "🛑",
+  "ad": "🛑",
+  "ads": "🛑",
+  "bug": "🛑",
+  "beetle": "🪲",
 
-    "global": "🌍",
-    "globe": "🌍",
-    "earth": "🌍",
-    "world": "🌍",
+  // AI / 开发
+  "robot": "🤖",
+  "robot_face": "🤖",
+  "openai": "🤖",
+  "chatgpt": "🤖",
+  "ai": "🤖",
+  "brain": "🧠",
+  "github": "🐱",
+  "octocat": "🐱",
+  "cat": "🐱",
+  "computer": "💻",
+  "desktop_computer": "🖥️",
+  "keyboard": "⌨️",
 
-    "fish": "🐟",
-    "final": "🐟",
+  // 常见服务
+  "youtube": "📹",
+  "yt": "📹",
+  "video_camera": "📹",
+  "movie_camera": "🎥",
+  "cinema": "🎦",
+  "netflix": "🎥",
+  "nf": "🎥",
+  "clapper": "🎬",
+  "film_projector": "📽️",
+  "tv": "📺",
+  "television": "📺",
+  "bilibili": "📺",
+  "bahamut": "📺",
+  "disney": "🦄",
+  "disneyplus": "🦄",
+  "unicorn": "🦄",
+  "unicorn_face": "🦄",
+  "hbo": "📼",
+  "vhs": "📼",
+  "spotify": "🎶",
+  "music": "🎶",
+  "musical_note": "🎵",
+  "notes": "🎶",
+  "netease": "🎶",
+  "tiktok": "🎵",
+  "telegram": "📲",
+  "tg": "📲",
+  "iphone": "📱",
+  "mobile_phone": "📱",
+  "calling": "📲",
 
-    "reject": "🛑",
-    "block": "🛑",
-    "ban": "🛑",
-    "ad": "🛑",
-    "ads": "🛑",
-    "bug": "🛑",
+  // 厂商/服务
+  "google": "📢",
+  "loudspeaker": "📢",
+  "mega": "📣",
+  "apple": "🍎",
+  "green_apple": "🍏",
+  "microsoft": "Ⓜ️",
+  "m": "Ⓜ️",
+  "onedrive": "☁️",
+  "cloud": "☁️",
 
-    "youtube": "📹",
-    "yt": "📹",
-    "netflix": "🎥",
-    "nf": "🎥",
-    "disney": "🦄",
-    "disneyplus": "🦄",
-    "hbo": "📼",
-    "spotify": "🎶",
-    "music": "🎶",
-    "netease": "🎶",
-    "tiktok": "🎵",
-    "telegram": "📲",
-    "tg": "📲",
-    "google": "📢",
-    "github": "🐱",
-    "openai": "🤖",
-    "chatgpt": "🤖",
-    "ai": "🤖",
-    "apple": "🍎",
-    "microsoft": "Ⓜ️",
-    "onedrive": "Ⓜ️",
-    "game": "🎮",
-    "steam": "🎮",
-    "xbox": "🎮",
-    "nintendo": "🎮",
-    "sony": "🎮",
-    "bilibili": "📺",
-    "bahamut": "📺",
-    "tvb": "📻",
+  // 游戏
+  "game": "🎮",
+  "video_game": "🎮",
+  "steam": "🎮",
+  "xbox": "🎮",
+  "nintendo": "🎮",
+  "sony": "🎮",
+  "joystick": "🕹️",
+  "space_invader": "👾",
 
-    "penguin": "🐧",
-    "self": "🐧",
-    "private": "🐧",
+  // 学术/下载/安全
+  "book": "📖",
+  "open_book": "📖",
+  "books": "📚",
+  "scholar": "📖",
+  "study": "📖",
+  "academic": "📖",
+  "download": "⬇️",
+  "arrow_down": "⬇️",
+  "inbox_tray": "📥",
+  "lock": "🔒",
+  "closed_lock_with_key": "🔐",
+  "unlock": "🔓",
+  "key": "🔑",
 
-    "book": "📖",
-    "scholar": "📖",
-    "study": "📖",
-    "academic": "📖",
-    "cloud": "☁️",
-    "download": "⬇️"
+  // 地区文字类，有些订阅不用 /flag-hk/，而用 /hong_kong/
+  "hong_kong": "🇭🇰",
+  "taiwan": "🇹🇼",
+  "singapore": "🇸🇬",
+  "japan": "🇯🇵",
+  "jp": "🇯🇵",
+  "korea": "🇰🇷",
+  "kr": "🇰🇷",
+  "us": "🇺🇸",
+  "usa": "🇺🇸",
+  "america": "🇺🇸",
+  "united_states": "🇺🇸",
+  "china": "🇨🇳",
+  "cn": "🇨🇳",
+  "uk": "🇬🇧",
+  "gb": "🇬🇧",
+  "united_kingdom": "🇬🇧",
+  "germany": "🇩🇪",
+  "france": "🇫🇷",
+  "canada": "🇨🇦",
+  "australia": "🇦🇺",
+  "netherlands": "🇳🇱",
+  "india": "🇮🇳",
+  "turkey": "🇹🇷",
+  "russia": "🇷🇺"
+};
+
+// 两位地区代码转旗帜 emoji，例如 hk -> 🇭🇰
+function countryCodeToFlag(code) {
+  if (typeof code !== "string") return "";
+
+  let cc = code.trim().toUpperCase();
+
+  const alias = {
+    "UK": "GB",
+    "EN": "GB",
+    "JA": "JP",
+    "KO": "KR"
   };
 
-  function countryCodeToFlag(code) {
-    if (typeof code !== "string") return "";
+  cc = alias[cc] || cc;
 
-    let cc = code.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(cc)) return "";
 
-    const alias = {
-      "UK": "GB",
-      "EN": "GB",
-      "JA": "JP",
-      "KO": "KR"
-    };
+  const base = 0x1F1E6;
 
-    cc = alias[cc] || cc;
+  return String.fromCodePoint(
+    base + cc.charCodeAt(0) - 65,
+    base + cc.charCodeAt(1) - 65
+  );
+}
 
-    if (!/^[A-Z]{2}$/.test(cc)) return "";
+function lookupEmoji(rawKey) {
+  if (typeof rawKey !== "string") return null;
 
-    const base = 0x1F1E6;
+  const k = rawKey.toLowerCase().replace(/-/g, "_");
 
-    return String.fromCodePoint(
-      base + cc.charCodeAt(0) - 65,
-      base + cc.charCodeAt(1) - 65
-    );
+  const candidates = [
+    k,
+    k.replace(/_/g, ""),
+    k.replace(/_face$/, ""),
+    k.replace(/^icon_/, ""),
+    k.replace(/^emoji_/, "")
+  ];
+
+  for (const key of candidates) {
+    if (emojiMap[key]) return emojiMap[key];
   }
 
-  function fixPlaceholderEmoji(text) {
-    if (typeof text !== "string") return text;
+  return null;
+}
 
-    let result = text;
+function fixPlaceholderEmoji(text) {
+  if (typeof text !== "string") return text;
 
-    // /flag-hk/ -> 🇭🇰
-    result = result.replace(/\/flag[-_]?([a-zA-Z]{2})\//g, function(match, code) {
-      return countryCodeToFlag(code) || match;
-    });
+  let result = text;
 
-    // /recycle/ -> ♻️
-    result = result.replace(/\/([a-zA-Z0-9_-]+)\//g, function(match, key) {
-      const normalized = key.toLowerCase();
-      return emojiMap[normalized] || match;
-    });
+  // /flag-hk/、/flag_hk/、/flagHK/ 这类
+  result = result.replace(/\/flag[-_]?([a-zA-Z]{2})\//g, function(match, code) {
+    return countryCodeToFlag(code) || match;
+  });
 
-    return result.replace(/\s+/g, " ").trim();
-  }
+  // /hk/、/jp/、/us/ 这种如果单独出现，也按国旗处理
+  result = result.replace(/\/([a-zA-Z]{2})\//g, function(match, code) {
+    return countryCodeToFlag(code) || match;
+  });
 
-  // 只处理“专用节点”这个策略组，不做模糊关键词全局替换
-  function fixDedicatedGroupName(name) {
-    if (typeof name !== "string") return name;
+  // /robot_face/、/globe_with_meridians/、/recycle/ 等
+  result = result.replace(/\/([a-zA-Z0-9_-]+)\//g, function(match, key) {
+    return lookupEmoji(key) || match;
+  });
 
-    let result = fixPlaceholderEmoji(name);
-
-    const clean = result
-      .replace(/^🐧\s*/, "")
-      .replace(/^\/penguin\/\s*/, "")
-      .trim();
-
-    if (
-      clean === "专用节点" ||
-      clean === "專用節點" ||
-      clean === "self" ||
-      clean === "Self" ||
-      clean === "SELF"
-    ) {
-      return "🐧 " + clean;
-    }
-
-    return result;
-  }
+  return result.replace(/\s+/g, " ").trim();
+}
 
   /***********************
    * 4. 建立重命名映射
