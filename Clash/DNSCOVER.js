@@ -78,6 +78,32 @@ function main(config) {
       }
     });
   }
+  if (Array.isArray(config.proxies)) {
+    config.proxies.forEach(proxy => {
+      if (proxy.type === "anytls") {
+        // 订阅转换器有时会输出 fingerprint，mihomo 更标准的是 client-fingerprint
+        if (proxy.fingerprint && !proxy["client-fingerprint"]) {
+          proxy["client-fingerprint"] = proxy.fingerprint;
+        }
 
+        // 删除非标准/兼容性较差的字段，避免 mihomo 解析歧义
+        delete proxy.fingerprint;
+
+        // 补充 AnyTLS 空闲会话默认参数；不写一般也行，写上更接近官方示例
+        if (proxy["idle-session-check-interval"] === undefined) {
+          proxy["idle-session-check-interval"] = 30;
+        }
+        if (proxy["idle-session-timeout"] === undefined) {
+          proxy["idle-session-timeout"] = 30;
+        }
+        if (proxy["min-idle-session"] === undefined) {
+          proxy["min-idle-session"] = 0;
+        }
+
+        // UDP 开启
+        proxy.udp = true;
+      }
+    });
+  }
   return config;
 }
