@@ -1,4 +1,3 @@
-```yaml
 name: DNS Split - CN Local Overseas Foreign
 desc: 国内和微信使用系统 DNS，境外域名使用境外 DoH，境外 DoH 经代理连接
 
@@ -71,4 +70,3 @@ rules:
   - DOMAIN-SUFFIX,mmbizurl.cn,DIRECT
   - DOMAIN-SUFFIX,gtimg.cn,DIRECT
   - DOMAIN-SUFFIX,qq.com,DIRECT
-```
