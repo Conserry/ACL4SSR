@@ -1,24 +1,24 @@
 ```yaml
-name: DNS and WeChat Direct Fix
-desc: 国内域名使用系统 DNS，境外域名使用 DoH，微信公众号相关资源强制直连
+name: DNS Split - CN Local Overseas Foreign
+desc: 国内和微信使用系统 DNS，境外域名使用境外 DoH，境外 DoH 经代理连接
 
 dns:
+  # 只用于解析 DNS 服务自身的域名；这里按 Stash 文档使用 IP
   default-nameserver: #!replace
     - 223.5.5.5
-    - 1.2.4.8
+    - 119.29.29.29
 
+  # 默认未命中 policy 的域名使用境外 DNS
+  # 地址使用 IP 形式，避免 follow-rule 开启后的递归解析问题
   nameserver: #!replace
     - https://1.1.1.1/dns-query
     - https://8.8.4.4/dns-query
 
-  # Stash 下建议关闭，避免国内 CDN 静态资源选路变差
-  follow-rule: false
+  # 境外 DoH 在你的网络下无法直连，因此保持开启，让其按规则走代理
+  follow-rule: true
 
+  # 国内 / 微信资源使用系统 DNS，以获得本地 CDN 选路
   nameserver-policy: #!replace
-    'mp.weixin.qq.com': system
-    '+.weixin.qq.com': system
-    '+.wx.qq.com': system
-    '+.qpic.cn': system
     'geosite:private': system
     'geosite:cn': system
 
@@ -35,13 +35,14 @@ dns:
     - 'time.*.gov'
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
+
+    # 微信 / 国内 CDN 返回真实 IP，避免 fake-ip 影响本地资源访问
+    - 'mp.weixin.qq.com'
     - '+.weixin.qq.com'
+    - '+.wechat.com'
     - '+.wx.qq.com'
     - '+.qpic.cn'
-
-# 数组默认会插入到原规则列表前面，因此这些规则会优先命中
-rules:
-  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
-  - DOMAIN-SUFFIX,wx.qq.com,DIRECT
-  - DOMAIN-SUFFIX,qpic.cn,DIRECT
-```
+    - '+.qlogo.cn'
+    - '+.mmbizurl.cn'
+    - '+.gtimg.cn'
+    - '+.qq.com'
