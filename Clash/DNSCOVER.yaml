@@ -1,3 +1,4 @@
+```yaml
 dns:
   enable: true
   listen: 0.0.0.0:53
@@ -7,41 +8,45 @@ dns:
   use-hosts: false
   use-system-hosts: false
   cache-algorithm: arc
+
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
 
   default-nameserver:
-    - system
-    - 119.29.29.29
-    - '2402:4e00::'
+    - https://223.5.5.5/dns-query
+    - https://1.1.1.1/dns-query
 
+  # 普通境外域名 / 未匹配域名
   nameserver:
-    - system
+    - https://208.67.222.222/dns-query
+    - https://77.88.8.8/dns-query
+    - https://1.1.1.1/dns-query
+    - https://8.8.4.4/dns-query
 
+  # 代理节点域名解析：替换为你自己的三条私人 DoH 完整地址
   proxy-server-nameserver:
     - https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
     - https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
     - https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139
 
+  # 其他直连域名：保持国内加密 DNS，不直接调用 system
   direct-nameserver:
     - https://223.5.5.5/dns-query
     - https://doh.pub/dns-query
 
+  direct-nameserver-follow-policy: true
+
+  # 仅明确属于国内 / 私有域名的解析走系统 DNS，以改善国内 CDN 选路
   nameserver-policy:
-    geosite:private,cn:
-      - https://223.5.5.5/dns-query
-      - https://doh.pub/dns-query
+    'geosite:private,cn':
+      - system
 
   fallback: []
 
   fake-ip-filter:
-    - '*.lan'
-    - '*.local'
-    - '*.arpa'
-    - 'time.*.com'
-    - 'ntp.*.com'
-    - '+.market.xiaomi.com'
+    - '+.lan'
+    - '+.local'
     - '+.msftconnecttest.com'
     - '+.msftncsi.com'
     - 'localhost.ptlogin2.qq.com'
@@ -52,3 +57,4 @@ dns:
     - 'time.*.gov'
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
+```
