@@ -1,3 +1,4 @@
+```yaml
 name: DNS Split - CN Local Overseas Foreign
 desc: 国内和微信使用系统 DNS，境外域名使用境外 DoH，境外 DoH 经代理连接
 
@@ -18,6 +19,15 @@ dns:
 
   # 国内 / 微信资源使用系统 DNS，以获得本地 CDN 选路
   nameserver-policy: #!replace
+    'mp.weixin.qq.com': system
+    '+.weixin.qq.com': system
+    '+.wechat.com': system
+    '+.wx.qq.com': system
+    '+.qpic.cn': system
+    '+.qlogo.cn': system
+    '+.mmbizurl.cn': system
+    '+.gtimg.cn': system
+    '+.qq.com': system
     'geosite:private': system
     'geosite:cn': system
 
@@ -34,6 +44,8 @@ dns:
     - 'time.*.gov'
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
+
+    # 微信 / 国内 CDN 返回真实 IP，避免 fake-ip 影响本地资源访问
     - 'mp.weixin.qq.com'
     - '+.weixin.qq.com'
     - '+.wechat.com'
@@ -43,3 +55,20 @@ dns:
     - '+.mmbizurl.cn'
     - '+.gtimg.cn'
     - '+.qq.com'
+
+# 以下规则会插入原规则列表前面
+# 境外 DoH 强制经代理访问；微信与腾讯资源强制直连
+rules:
+  - IP-CIDR,1.1.1.1/32,🚀 节点选择,no-resolve
+  - IP-CIDR,8.8.4.4/32,🚀 节点选择,no-resolve
+
+  - DOMAIN,mp.weixin.qq.com,DIRECT
+  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
+  - DOMAIN-SUFFIX,wechat.com,DIRECT
+  - DOMAIN-SUFFIX,wx.qq.com,DIRECT
+  - DOMAIN-SUFFIX,qpic.cn,DIRECT
+  - DOMAIN-SUFFIX,qlogo.cn,DIRECT
+  - DOMAIN-SUFFIX,mmbizurl.cn,DIRECT
+  - DOMAIN-SUFFIX,gtimg.cn,DIRECT
+  - DOMAIN-SUFFIX,qq.com,DIRECT
+```
