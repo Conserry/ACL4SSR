@@ -44,17 +44,6 @@ dns:
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
 
-    # 微信 / 国内 CDN 返回真实 IP，避免 fake-ip 影响本地资源访问
-    - 'mp.weixin.qq.com'
-    - '+.weixin.qq.com'
-    - '+.wechat.com'
-    - '+.wx.qq.com'
-    - '+.qpic.cn'
-    - '+.qlogo.cn'
-    - '+.mmbizurl.cn'
-    - '+.gtimg.cn'
-    - '+.qq.com'
-
 # 以下规则会插入原规则列表前面
 # 境外 DoH 强制经代理访问；微信与腾讯资源强制直连
 rules:
