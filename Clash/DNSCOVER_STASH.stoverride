@@ -49,13 +49,3 @@ dns:
 rules:
   - IP-CIDR,1.1.1.1/32,🚀 节点选择,no-resolve
   - IP-CIDR,8.8.4.4/32,🚀 节点选择,no-resolve
-
-  - DOMAIN,mp.weixin.qq.com,DIRECT
-  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
-  - DOMAIN-SUFFIX,wechat.com,DIRECT
-  - DOMAIN-SUFFIX,wx.qq.com,DIRECT
-  - DOMAIN-SUFFIX,qpic.cn,DIRECT
-  - DOMAIN-SUFFIX,qlogo.cn,DIRECT
-  - DOMAIN-SUFFIX,mmbizurl.cn,DIRECT
-  - DOMAIN-SUFFIX,gtimg.cn,DIRECT
-  - DOMAIN-SUFFIX,qq.com,DIRECT
