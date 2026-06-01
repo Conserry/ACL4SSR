@@ -8,16 +8,30 @@ function main(config) {
 
   // 国内 DNS：用于代理节点域名、直连域名、国内域名
   const domesticNameservers = [
+    //"system"
     "https://223.5.5.5/dns-query",
     "https://doh.pub/dns-query"
+    //"https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139",
+    //"https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139",
+    //"https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139"
   ];
 
+  const cnNameservers = [
+    "system"
+  ];
+  
+  const proxyNameservers = [
+    "https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139",
+    "https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139",
+    "https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139"
+  ];
   // 国外 DNS：不指定代理组版本，依赖 respect-rules
   const foreignNameservers = [
     "https://208.67.222.222/dns-query",
     "https://77.88.8.8/dns-query",
     "https://1.1.1.1/dns-query",
     "https://8.8.4.4/dns-query"
+    //"system"
   ];
 
   // 未来如果又出现新的 /xxx/ 占位符，在这里加一行即可
@@ -65,18 +79,21 @@ function main(config) {
     ],
 
     "default-nameserver": [
-      "223.5.5.5",
-      "1.2.4.8"
+      "https://223.5.5.5/dns-query",
+      "https://1.1.1.1/dns-query"
+      //"system",
+      //"119.29.29.29",
+      //'2402:4e00::'
     ],
 
     "nameserver": foreignNameservers,
 
-    "proxy-server-nameserver": domesticNameservers,
+    "proxy-server-nameserver": proxyNameservers,
 
     "direct-nameserver": domesticNameservers,
-
+    "direct-nameserver-follow-policy": true,
     "nameserver-policy": {
-      "geosite:private,cn": domesticNameservers
+      "geosite:private,cn": cnNameservers
     },
 
     "fallback": []
