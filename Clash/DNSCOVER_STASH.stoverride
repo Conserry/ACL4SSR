@@ -34,8 +34,6 @@ dns:
     - 'time.*.gov'
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
-
-    # 微信 / 国内 CDN 返回真实 IP，避免 fake-ip 影响本地资源访问
     - 'mp.weixin.qq.com'
     - '+.weixin.qq.com'
     - '+.wechat.com'
