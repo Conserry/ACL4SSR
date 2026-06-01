@@ -37,9 +37,3 @@ dns:
     - '+.weixin.qq.com'
     - '+.wx.qq.com'
     - '+.qpic.cn'
-
-# 数组默认会插入到原规则列表前面，因此这些规则会优先命中
-rules:
-  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
-  - DOMAIN-SUFFIX,wx.qq.com,DIRECT
-  - DOMAIN-SUFFIX,qpic.cn,DIRECT
