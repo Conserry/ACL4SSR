@@ -1,0 +1,39 @@
+name: DNS - CN System and Overseas DoH
+desc: 国内域名使用系统 DNS，境外域名使用加密 DNS，并开启 DNS 跟随规则
+
+dns:
+  # Stash 的 default-nameserver 官方要求填写 DNS 服务器 IP
+  # 仅用于解析 DoH 等 DNS 服务自身的域名
+  default-nameserver: #!replace
+    - 223.5.5.5
+    - 1.2.4.8
+
+  # Stash 会并发请求所填 DNS，并使用最快响应
+  # 移动端建议只保留 1~2 个，避免功耗和结果过于分散
+  nameserver: #!replace
+    - https://1.1.1.1/dns-query
+    - https://8.8.4.4/dns-query
+
+  # 相当于 Mihomo 的 respect-rules: true
+  # 境外 DoH 的连接可以按你的规则走代理
+  follow-rule: true
+
+  # 国内及私有域名使用系统 DNS，改善运营商 CDN 选路
+  nameserver-policy: #!replace
+    'geosite:private': system
+    'geosite:cn': system
+
+  # 命中这些域名时返回真实 IP，不使用 fake-ip
+  fake-ip-filter: #!replace
+    - '+.lan'
+    - '+.local'
+    - '+.msftconnecttest.com'
+    - '+.msftncsi.com'
+    - 'localhost.ptlogin2.qq.com'
+    - 'localhost.sec.qq.com'
+    - '+.in-addr.arpa'
+    - '+.ip6.arpa'
+    - 'time.*.com'
+    - 'time.*.gov'
+    - 'pool.ntp.org'
+    - 'localhost.work.weixin.qq.com'
