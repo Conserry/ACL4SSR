@@ -16,7 +16,7 @@ dns:
 
   # 相当于 Mihomo 的 respect-rules: true
   # 境外 DoH 的连接可以按你的规则走代理
-  follow-rule: fasle
+  follow-rule: false
 
   # 国内及私有域名使用系统 DNS，改善运营商 CDN 选路
   nameserver-policy: #!replace
