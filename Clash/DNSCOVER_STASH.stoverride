@@ -18,15 +18,6 @@ dns:
 
   # 国内 / 微信资源使用系统 DNS，以获得本地 CDN 选路
   nameserver-policy: #!replace
-    'mp.weixin.qq.com': system
-    '+.weixin.qq.com': system
-    '+.wechat.com': system
-    '+.wx.qq.com': system
-    '+.qpic.cn': system
-    '+.qlogo.cn': system
-    '+.mmbizurl.cn': system
-    '+.gtimg.cn': system
-    '+.qq.com': system
     'geosite:private': system
     'geosite:cn': system
 
