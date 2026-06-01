@@ -12,18 +12,17 @@ dns:
   fake-ip-filter-mode: blacklist
 
   default-nameserver:
-    - 223.5.5.5
-    - 1.2.4.8
+    - system
+    - 119.29.29.29
+    - '2402:4e00::'
 
   nameserver:
-    - https://208.67.222.222/dns-query
-    - https://77.88.8.8/dns-query
-    - https://1.1.1.1/dns-query
-    - https://8.8.4.4/dns-query
+    - system
 
   proxy-server-nameserver:
-    - https://223.5.5.5/dns-query
-    - https://doh.pub/dns-query
+    - https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+    - https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+    - https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139
 
   direct-nameserver:
     - https://223.5.5.5/dns-query
@@ -37,8 +36,12 @@ dns:
   fallback: []
 
   fake-ip-filter:
-    - '+.lan'
-    - '+.local'
+    - '*.lan'
+    - '*.local'
+    - '*.arpa'
+    - 'time.*.com'
+    - 'ntp.*.com'
+    - '+.market.xiaomi.com'
     - '+.msftconnecttest.com'
     - '+.msftncsi.com'
     - 'localhost.ptlogin2.qq.com'
