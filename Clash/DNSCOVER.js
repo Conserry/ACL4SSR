@@ -622,7 +622,7 @@ function main(config) {
     });
   }
 const tailscaleDirectRules = [
-  "DOMAIN,headscale.conserry.com,DIRECT"
+  "DOMAIN,headscale.conserry.com,DIRECT",
   "IP-CIDR,100.64.0.0/10,DIRECT,no-resolve",
   "IP-CIDR,192.168.100.0/24,DIRECT,no-resolve",
   "IP-CIDR,192.168.1.0/24,DIRECT,no-resolve",
