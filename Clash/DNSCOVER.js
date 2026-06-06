@@ -620,6 +620,25 @@ function main(config) {
       return parts.join(",");
     });
   }
+const tailscaleDirectRules = [
+  "IP-CIDR,100.64.0.0/10,DIRECT,no-resolve",
+  "IP-CIDR,192.168.100.0/24,DIRECT,no-resolve",
+  "IP-CIDR,192.168.1.0/24,DIRECT,no-resolve",
+];
 
+config.rules = [
+  ...tailscaleDirectRules,
+  ...(config.rules || []),
+];
+
+config.tun = config.tun || {};
+config.tun["route-exclude-address"] = [
+  ...new Set([
+    ...(config.tun["route-exclude-address"] || []),
+    "100.64.0.0/10",
+    "192.168.100.0/24",
+    "192.168.1.0/24",
+  ]),
+];
   return config;
 }
