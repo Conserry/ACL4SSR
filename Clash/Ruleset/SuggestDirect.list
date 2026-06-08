@@ -4,7 +4,16 @@ DOMAIN-SUFFIX,conserry.com
 
 # Apple / passkey caBLE
 DOMAIN,cable.auth.com
+DOMAIN,cable.ua5v.com
 DOMAIN,app-site-association.cdn-apple.com
+DOMAIN,account.apple.com
+DOMAIN,appleid.cdn-apple.com
+DOMAIN,idmsa.apple.com
+DOMAIN,gsa.apple.com
+DOMAIN-SUFFIX,push.apple.com
+DOMAIN-SUFFIX,push-apple.com.akadns.net
+DOMAIN-SUFFIX,courier.push.apple.com
+DOMAIN,setup.icloud.com
 
 # Google / Android passkey caBLE
 DOMAIN,cable.ua5v.com
