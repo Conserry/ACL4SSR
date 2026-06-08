@@ -1,0 +1,19 @@
+# 建议直连
+# Conserry services
+DOMAIN-SUFFIX,conserry.com
+
+# Apple / passkey caBLE
+DOMAIN,cable.auth.com
+DOMAIN,app-site-association.cdn-apple.com
+
+# Google / Android passkey caBLE
+DOMAIN,cable.ua5v.com
+
+# VPS
+IP-CIDR,101.133.141.189/32,no-resolve
+IP-CIDR,47.117.47.231/32,no-resolve
+
+# Tailscale / LAN
+IP-CIDR,100.64.0.0/10,no-resolve
+IP-CIDR,192.168.100.0/24,no-resolve
+IP-CIDR,192.168.1.0/24,no-resolve
