@@ -5,14 +5,14 @@ dns:
   default-nameserver: #!replace
     - 223.5.5.5
     - 119.29.29.29
-  # 默认未命中 policy 的域名使用境外 DNS。
-  # 使用 IP 形式，避免 follow-rule 开启后还要解析公共 DoH 域名。
+  # 保留 system 作为启动兜底。Stash 没有 Mihomo 的
+  # proxy-server-nameserver，节点域名必须先于代理 DNS 可用。
   nameserver: #!replace
-    - https://1.1.1.1/dns-query
-    - https://8.8.4.4/dns-query
+    - system
   # 境外 DoH 按规则经代理连接。
   follow-rule: true
-  # 国内和微信使用系统 DNS；代理节点域名使用专用 DoH 直连解析。
+  # 国内和微信使用系统 DNS；代理节点域名使用专用 DoH 直连解析；
+  # 其余境外域名再使用经代理连接的境外 DoH。
   nameserver-policy: #!replace
     'mp.weixin.qq.com': system
     '+.weixin.qq.com': system
@@ -29,6 +29,9 @@ dns:
       - https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139
     'geosite:private': system
     'geosite:cn': system
+    'geosite:geolocation-!cn':
+      - https://1.1.1.1/dns-query
+      - https://8.8.4.4/dns-query
   fake-ip-filter: #!replace
     - '+.lan'
     - '+.local'
