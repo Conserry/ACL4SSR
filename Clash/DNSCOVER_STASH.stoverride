@@ -1,22 +1,18 @@
 name: DNS Split - CN Local Overseas Foreign
 desc: 国内和微信使用系统 DNS，境外域名使用境外 DoH，境外 DoH 经代理连接
-
 dns:
-  # 只用于解析 DNS 服务自身的域名；这里按 Stash 文档使用 IP
+  # 只用于解析 DNS 服务自身的域名；Stash 要求这里使用 IP。
   default-nameserver: #!replace
     - 223.5.5.5
     - 119.29.29.29
-
-  # 默认未命中 policy 的域名使用境外 DNS
-  # 地址使用 IP 形式，避免 follow-rule 开启后的递归解析问题
+  # 默认未命中 policy 的域名使用境外 DNS。
+  # 使用 IP 形式，避免 follow-rule 开启后还要解析公共 DoH 域名。
   nameserver: #!replace
     - https://1.1.1.1/dns-query
     - https://8.8.4.4/dns-query
-
-  # 境外 DoH 在你的网络下无法直连，因此保持开启，让其按规则走代理
+  # 境外 DoH 按规则经代理连接。
   follow-rule: true
-
-  # 国内 / 微信资源使用系统 DNS，以获得本地 CDN 选路
+  # 国内和微信使用系统 DNS；代理节点域名使用专用 DoH 直连解析。
   nameserver-policy: #!replace
     'mp.weixin.qq.com': system
     '+.weixin.qq.com': system
@@ -27,9 +23,12 @@ dns:
     '+.mmbizurl.cn': system
     '+.gtimg.cn': system
     '+.qq.com': system
+    '+.ovalyraa.com':
+      - https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+      - https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+      - https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139
     'geosite:private': system
     'geosite:cn': system
-
   fake-ip-filter: #!replace
     - '+.lan'
     - '+.local'
@@ -43,9 +42,11 @@ dns:
     - 'time.*.gov'
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
-
-# 以下规则会插入原规则列表前面
-# 境外 DoH 强制经代理访问；微信与腾讯资源强制直连
+# 覆写中的数组默认插入原数组前面。
+# 专用 DoH 必须直连，避免解析代理节点时递归依赖代理本身。
 rules:
+  - DOMAIN,hydrogen1693.com,DIRECT
+  - DOMAIN,subprime7404.com,DIRECT
+  - DOMAIN,tribunal2944.com,DIRECT
   - IP-CIDR,1.1.1.1/32,🚀 节点选择,no-resolve
   - IP-CIDR,8.8.4.4/32,🚀 节点选择,no-resolve
