@@ -27,6 +27,10 @@ dns:
       - https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
       - https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
       - https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+    '+.sbs':
+      - https://hydrogen1693.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+      - https://subprime7404.com:44443/dns-query/48417728-40aa-48cf-8a06-c308d0256139
+      - https://tribunal2944.com/dns-query/48417728-40aa-48cf-8a06-c308d0256139
     'geosite:private': system
     'geosite:cn': system
     'geosite:geolocation-!cn':
@@ -45,6 +49,11 @@ dns:
     - 'time.*.gov'
     - 'pool.ntp.org'
     - 'localhost.work.weixin.qq.com'
+    - '0a964338-5b52-4b6c-b3f4-8ecc629deb8a.1pti3lzfn1.sbs'
+    - 'c76af25c-8b32-4aa0-a0cc-be85ec61ec54.uvvztzfbir.sbs'
+    - '147c0253-03e8-4f59-92fc-adaa19fddc57.csmmdglwhg.sbs'
+    - '90138a59-2a67-4283-a034-c744db627bed.x6qbh8i1nn.sbs'
+    - '+.ovalyraa.com'
 # 覆写中的数组默认插入原数组前面。
 # 专用 DoH 必须直连，避免解析代理节点时递归依赖代理本身。
 rules:
